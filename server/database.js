@@ -120,6 +120,19 @@ class Database {
             });
         });
     }
+
+
+    // user
+
+    async createUser(username, password) {
+                                        return new Promise((resolve, reject) => {
+                                                                                const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
+                                                                                this.connection.query(query, [username, password], (err, results) => {
+                                                                                    if (err) reject(err);
+                                                                                    resolve(results);
+                                                                                });
+                                                                            });
+                                    }
 }
 
-module.exports = Database;
+module.exports = new Database();

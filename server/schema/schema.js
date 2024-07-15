@@ -32,6 +32,16 @@ const typeDefs = gql`
     cau_hoi_id: Int!
   }
 
+  type AuthPayload {
+  token: String!
+  refreshToken: String!
+ }
+
+ type RegisterResponse {
+    message: String!
+    statusCode: Int!
+  }
+
   type Query {
     users: [User!]!
     userByUsername(username: String!): User
@@ -60,6 +70,8 @@ const typeDefs = gql`
     createAnswer(noi_dung: String!, dung: Boolean!, cau_hoi_id: Int!): Answer!
     updateAnswer(id: Int!, noi_dung: String!, dung: Boolean!, cau_hoi_id: Int!): Answer!
     deleteAnswer(id: Int!): Boolean!
+    login(username: String!, password: String!): AuthPayload!
+    register(username: String!, password: String!): RegisterResponse!
   }
 `;
 

@@ -1,4 +1,7 @@
-const db = require('../database.js');
+
+const bcrypt = require('bcryptjs');
+const db = require('../database')
+const JWTHelper = require('../helpers/JWTHelper');
 
 const resolvers = {
   Query: {
@@ -88,9 +91,50 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (_, { username, password, admin }) => {
+    
+    login: async (_, { username, password }, { db }) => {
+      const user = await db.getUserByUsername(username);
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+
+      if (!validPassword) {
+        throw new Error('Invalid password');
+      }
+
+      // Generate tokens
+      const token = JWTHelper.signToken({username: username, id: user.id});
+      const refreshToken = JWTHelper.signRefreshToken({username: username, id: user.id});
+
+      return {
+        token,
+        refreshToken
+      };
+    },
+
+    register: async (_, { username, password }) => {
       try {
-        const newUser = await db.createUser(username, password, admin);
+        const existingUser = await db.getUserByUsername(username);
+        if (existingUser) {
+          throw new Error('Username is already taken');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await db.createUser( username, hashedPassword );
+
+        return { message: 'Register successfully', statusCode: 201 };
+      } catch (error) {
+        throw new Error(`Failed to register user: ${error.message}`);
+      }
+    },
+
+    createUser: async (_, { username, password }) => {
+      try {
+        const newUser = await db.createUser(username, password);
         return newUser;
       } catch (error) {
         throw new Error(`Failed to create user: ${error.message}`);
