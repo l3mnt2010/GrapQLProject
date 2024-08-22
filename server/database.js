@@ -1,138 +1,49 @@
-require('dotenv').config()
-const mysql = require('mysql');
+'use strict';
+const Sequelize = require('sequelize');
 
-class Database {
-    constructor() {
-        this.connection = mysql.createConnection({
-            host: process.env.MYSQL_HOST,
-            user: process.env.MYSQL_USER,
-            password: process.env.MYSQL_PASSWORD,
-            database: process.env.MYSQL_DATABASE
-        });
+const db = {};
+
+const sequelize = new Sequelize( 
+  process.env.MYSQL_DATABASE,  
+  process.env.MYSQL_USER, 
+  process.env.MYSQL_PASSWORD, 
+  {
+    host: process.env.MYSQL_HOST,
+    port: process.env.PORT,
+    dialect: 'mysql',
+    define: {
+        freezeTableName: true,
+    },
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+    },
+    logging: false,
+});
+
+
+const models = [
+    require('./models/cauhoi.js'),
+    require('./models/khoahoc.js'),
+    require('./models/monhoc.js'),
+    require('./models/phuongan.js'),
+    require('./models/user.js')
+];
+
+models.forEach(model => {
+    const seqModel = model(sequelize, Sequelize.DataTypes);
+    db[seqModel.name] = seqModel;
+});
+
+Object.keys(db).forEach(key => {
+    if ('associate' in db[key]) {
+        db[key].associate(db);
     }
+});
 
-    async connect() {
-        return new Promise((resolve, reject) => {
-            this.connection.connect((err) => {
-                if (err) reject(err);
-                console.log('Connected to MySQL database');
-                resolve();
-            });
-        });
-    }
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-    async disconnect() {
-        return new Promise((resolve, reject) => {
-            this.connection.end((err) => {
-                if (err) reject(err);
-                console.log('Disconnected from MySQL database');
-                resolve();
-            });
-        });
-    }
-
-    async getAllUsers() {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM users';
-            this.connection.query(query, (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        });
-    }
-
-    async getUserByUsername(username) {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM users WHERE username = ?';
-            this.connection.query(query, [username], (err, results) => {
-                if (err) reject(err);
-                resolve(results[0]);
-            });
-        });
-    }
-
-    async getAllCourses() {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM khoahoc';
-            this.connection.query(query, (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        });
-    }
-
-    async getCourseById(id) {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM khoahoc WHERE id = ?';
-            this.connection.query(query, [id], (err, results) => {
-                if (err) reject(err);
-                resolve(results[0]);
-            });
-        });
-    }
-
-    async getAllSubjects() {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM monhoc';
-            this.connection.query(query, (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        });
-    }
-
-    async getSubjectById(id) {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM monhoc WHERE id = ?';
-            this.connection.query(query, [id], (err, results) => {
-                if (err) reject(err);
-                resolve(results[0]);
-            });
-        });
-    }
-
-    async getAllQuestions() {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM cauhoi';
-            this.connection.query(query, (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        });
-    }
-
-    async getQuestionById(id) {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM cauhoi WHERE id = ?';
-            this.connection.query(query, [id], (err, results) => {
-                if (err) reject(err);
-                resolve(results[0]);
-            });
-        });
-    }
-
-    async getAnswersForQuestion(questionId) {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM phuongan WHERE cau_hoi_id = ?';
-            this.connection.query(query, [questionId], (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        });
-    }
-
-
-    // user
-
-    async createUser(username, password) {
-                                        return new Promise((resolve, reject) => {
-                                                                                const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
-                                                                                this.connection.query(query, [username, password], (err, results) => {
-                                                                                    if (err) reject(err);
-                                                                                    resolve(results);
-                                                                                });
-                                                                            });
-                                    }
-}
-
-module.exports = new Database();
+module.exports = db;

@@ -1,46 +1,70 @@
-require('dotenv').config();
 const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const Database = require('./database');
+require('dotenv').config({path:'.env'});
 const cors = require('cors');
-const authGuard = require('./middleware/authGuard');
-const JWTHelper = require('./helpers/JWTHelper');
+const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge');
+const { ApolloServer } = require('apollo-server-express');
+const { db, sequelize } = require('./database');
+const auth = require('./GraphQL/auth');
+const answer = require('./GraphQL/answer');
+const course = require('./GraphQL/course');
+const question = require('./GraphQL/question');
+const subject = require('./GraphQL/subject');
+const user = require('./GraphQL/user');
+const authMiddleware = require('./middleware/authGuard');
 
-// Load schema & resolvers
-const typeDefs = require('./schema/schema');
-const resolvers = require('./resolver');
+const typeDefs = mergeTypeDefs([
+  auth.typeDefs,
+  answer.typeDefs,
+  course.typeDefs,
+  question.typeDefs,
+  subject.typeDefs,
+  user.typeDefs
+]);
 
-global.db = Database;
-const app = express();
-app.use(cors())
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const resolvers = mergeResolvers([
+  auth.resolvers,
+  answer.resolvers,
+  course.resolvers,
+  question.resolvers,
+  subject.resolvers,
+  user.resolvers
+]);
 
-// Middleware for authentication
-// app.use(authGuard);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => ({ user: req.user, db })
+});
 
 const startServer = async () => {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    // add middleware
-    context: ({ req }) => {
-      const token = req.headers.authorization || '';
-      try {
-        const { userId } = JWTHelper.verifyToken(token);
-        return { userId, db };
-       } catch (error) {
-         return { db };
-        }
-      }
-  });
 
+try {
+   
+  await sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+
+  await sequelize.sync({ alter: true });
+  console.log('Database synchronized.');
   await server.start();
+  
+  const app = express();
+  app.use(cors({ origin: 'http://localhost:3000' }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  // app.use(authMiddleware());
   server.applyMiddleware({ app });
 
-  app.listen({ port: process.env.PORT || 4000 }, () =>
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
+  app.use(function(req, res) {
+    res.status(404).send({ message: 'Prohibit' });
+  });
+  
+
+  app.listen({ port: 4000 }, () => 
+    console.log(`🚀 Server ready at http://localhost:4000/graphql`)
   );
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
 };
 
 startServer();
