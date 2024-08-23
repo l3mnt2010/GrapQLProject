@@ -8,13 +8,14 @@ export const loginUser = async(user: any, dispatch: any, navigate : any) => {
            dispatch(loginStart());
            try {
             const response = await URL.post('/graphql', {
-               query: `mutation($username: String!, $password: String!) { login(username: $username, password: $password) { token, refreshToken } }`,
+               query: `mutation($username: String!, $password: String!) { login(username: $username, password: $password) {userInformation {id username}, token, refreshToken } }`,
                    variables: {
                        'username': user.username,
                        'password': user.password
                     }
                })
-            dispatch(loginSuccess(response.data));
+            console.log(response.data.data);
+            dispatch(loginSuccess(response.data.data));
            }
        catch (err : any) {
             dispatch(loginFailure());

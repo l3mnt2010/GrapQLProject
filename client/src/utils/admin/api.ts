@@ -2,20 +2,15 @@
 import { getUserFailure, getUserStart, getUserSuccess } from "../../redux/slide/userSlide";
 import {URL} from "../baseURL";
 
-export const getAllUser = async(user: any, dispatch: any, navigate : any) => {
-                dispatch(getUserStart());
+export const getAllUser = async() => {
                 try {
                                          const response = await URL.post('/graphql', {
-                                                query: `mutation($username: String!, $password: String!) { register(username: $username, password: $password) { message } }`,
-                                                variables: {
-                                                    'username': user.username,
-                                                    'password': user.password
-                                                }
+                                                query: `query { users { id username admin } }`
                                             })
-                                         dispatch(getUserSuccess(response.data));
+                                         return response.data.data;
                 }
                 catch (err : any) {
-                    dispatch(getUserFailure());
+                    
                 }
      }
 
@@ -75,19 +70,17 @@ export const editDetailUser = async(user: any, dispatch: any, navigate : any) =>
 }
 
 
-export const deleteDetailUser = async(user: any, dispatch: any, navigate : any) => {
-    dispatch(getUserStart());
+export const deleteDetailUser = async(id: string) => {
     try {
                              const response = await URL.post('/graphql', {
-                                    query: `mutation(id: Int) { deleteUser(id: $id) { message } }`,
-                                    variables: {
-                                        'id': user.id
-                                    }
+                                    query: `mutation($id: Int!) { deleteUser(id: $id) }`,
+                                        variables: {
+                                        'id': Number(id)
+                                          }
                                 })
-                             dispatch(getUserSuccess(response.data));
+                            return response;  
     }
     catch (err : any) {
-        dispatch(getUserFailure());
     }
 }
 

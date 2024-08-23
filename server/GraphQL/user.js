@@ -20,7 +20,7 @@ const typeDefs = gql`
     updateUser(id: Int, username: String, password: String, admin: Int): String
     deleteUser(id: Int): String
   }
-`;
+`;  
 
 const resolvers = {
   Query: {

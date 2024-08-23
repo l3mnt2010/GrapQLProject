@@ -1,23 +1,23 @@
-# Use the official Node.js 20 image as the base image
-FROM node:20
+# pull official base image
+FROM node:13.12.0-alpine
 
-# Set the working directory in the container
+# set working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
 
-# Install the dependencies
+# install app dependencies
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
+RUN npm install react-scripts@4.0.3 -g
 
-# Copy the rest of the application's source code to the container
-COPY . .
+# add app
+COPY . ./
 
-# Build the React.js application
-RUN npm run build
+# start app
+CMD ["npm", "start"]
 
-# Expose the port that the application listens on
+# expose port
 EXPOSE 3000
-
-# Start a simple web server to serve the built React.js files
-CMD [ "npx", "serve", "-s", "build" ]

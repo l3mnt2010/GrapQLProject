@@ -19,8 +19,8 @@ const LoginPage = () => {
       loginUser(data, dispatch, navigate);
       toast.clearWaitingQueue();
       toast('Login success!', { type: 'success' });
-      navigate("/home");
-    } catch (err) {
+      navigate("/dashboard/course");
+    } catch (err) { 
       toast.clearWaitingQueue();
       toast('Username or password incorrect', { type: 'error'});
     }

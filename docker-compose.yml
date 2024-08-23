@@ -5,8 +5,8 @@ services:
     image: mysql:8.0 # Uses the MySQL 8.0 Docker image
     environment: # Sets environment variables for the database configuration
       - MYSQL_DATABASE=on_tap_khoa_hoc # Specifies the name of the database
-      - MYSQL_PASSWORD=lamnt2010 # Sets the password for the MySQL user
-      - MYSQL_ROOT_PASSWORD=lamnt2010 # Sets the root password for MySQL
+      - MYSQL_PASSWORD= # Sets the password for the MySQL user
+      - MYSQL_ROOT_PASSWORD= # Sets the root password for MySQL
     networks:
       - sameNetworkAsMysql # Connects the service to the 'sameNetworkAsMysql' network
     ports:
