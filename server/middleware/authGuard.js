@@ -1,34 +1,38 @@
-const jwtHelper = require('../helpers/JWTHelper');
+// const jwtHelper = require('../helpers/JWTHelper');
 
-// Middleware xác thực và phân quyền cho Express
-const authMiddleware = (roles = []) => {
-  return (req, res, next) => {
-    const authHeader = req.headers.authorization;
+// const middlewareController = {
+//   verifyToken: (req, res, next) => {
+//     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+//     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
 
-    const token = authHeader.substring(7);
+//     const token = authHeader.split(" ")[1];
 
-    try {
-      const decodedToken = jwtHelper.verifyToken(token);
-      if (!decodedToken) {
-        return res.status(401).json({ message: 'Unauthorized' });
-      }
+//     try {
+//       const decodedToken = jwtHelper.verifyToken(token);
+//       if (!decodedToken) {
+//         return res.status(401).json({ message: 'Unauthorized' });
+//       }
 
-      req.userId = decodedToken.userId;
-      req.userRole = decodedToken.role;
+//       req.user = decodedToken;
+//       next();
+//     } catch (error) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
+//   },
 
-      if (roles.length && !roles.includes(req.userRole)) {
-        return res.status(403).json({ message: 'Forbidden' });
-      }
+//   verifyTokenAndAdminAuth: (req, res, next) => {
+//     middlewareController.verifyToken(req, res, () => {
+//       // Đảm bảo rằng middlewareController.verifyToken không trả về trước khi callback được thực thi
+//       if (req.user.admin || req.user.id === parseInt(req.params.id, 10)) {
+//         next();
+//       } else {
+//         return res.status(403).json({ message: 'You do not have permission to access' });
+//       }
+//     });
+//   }
+// };
 
-      next();
-    } catch (error) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-  };
-};
-
-module.exports = authMiddleware;
+// module.exports = middlewareController;

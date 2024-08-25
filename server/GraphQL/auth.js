@@ -1,5 +1,4 @@
 const { gql } = require('apollo-server-express');
-const bcrypt = require('bcryptjs');
 const JWTHelper = require('./../helpers/JWTHelper');
 const db = require('./../database');
 
@@ -11,6 +10,8 @@ const typeDefs = gql`
   type Mutation {
     login(username: String!, password: String!): AuthPayload
     register(username: String!, password: String!): RegisterResponse
+    refreshToken: RefreshTokenResponse
+    logout: LogoutResponse
   }
 
   type User {
@@ -22,6 +23,15 @@ const typeDefs = gql`
     userInformation: User!
     token: String!
     refreshToken: String!
+  }
+  
+  type LogoutResponse { 
+    success: String!
+    message: String!
+  }
+  
+  type RefreshTokenResponse {
+    token: String!
   }
 
   type RegisterResponse {
@@ -38,105 +48,107 @@ const resolvers = {
     },
   },
   Mutation: {
-    login: async (_, { username, password }) => {
-      const user = await db.users.findOne({ where: { username } });
-    
-      if (!user) throw new Error('User not found');
-    
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (!validPassword) throw new Error('Invalid password');
-    
-      const token = JWTHelper.signToken({ id: user.id, username });
-      
-      const refreshToken = JWTHelper.signRefreshToken({ id: user.id, username });
-      
-      await db.users.update(
-        { token, refreshToken },
-        { where: { id: user.id } }
-      );
+    login: async (_, { username, password }, { req, res }) => {
+      try {
+        const user = await db.users.findOne({ where: { username } });
+  
+        if (!user) throw new Error('User not found');
+        if (user.password !== password) throw new Error('Invalid password');
+  
+        const token = JWTHelper.signToken({ id: user.id, username });
+        const refreshToken = JWTHelper.signRefreshToken({ id: user.id, username });
+  
+        await db.users.update(
+          { token, refreshToken },
+          { where: { id: user.id } }
+        );
 
-      const userInformation = {
-        id: user.id,
-        username: user.username,
-      };
-
-      return {
-        userInformation,
-        token,
-        refreshToken,
-      };
+        res.cookie('refreshToken', refreshToken, { 
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict"
+        });
+  
+        const userInformation = {
+          id: user.id,
+          username: user.username,
+        };
+  
+        return {
+          userInformation,
+          token,
+          refreshToken,
+        };
+      } catch (error) {
+        throw new Error(`Login failed: ${error.message}`);
+      }
     },
-    
-
+  
     register: async (_, { username, password }) => {
-      const existingUser = await db.users.findOne({ where: { username } });
-      if (existingUser) throw new Error('Username already taken');
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await db.users.create({ username, password: hashedPassword });
-
-      return { message: 'User registered successfully', statusCode: 201 };
+      try {
+        const existingUser = await db.users.findOne({ where: { username } });
+        if (existingUser) throw new Error('Username already taken');
+        
+        await db.users.create({ username, password });
+        return { message: 'User registered successfully', statusCode: 201 };
+      } catch (error) {
+        throw new Error(`Registration failed: ${error.message}`);
+      }
     },
 
-    // refreshToken: async (_, { refreshToken }) => {
-    //   // Xác thực refreshToken
-    //   try {
-    //     const payload = JWTHelper.verifyRefreshToken(refreshToken);
+    refreshToken: async (_, __, { req, res }) => {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) return res.status(401).json("you are not authentacate");
+      try {
+        const payload = JWTHelper.verifyRefreshToken(refreshToken);
         
-    //     // Tìm người dùng dựa trên payload của refreshToken
-    //     const user = await db.users.findOne({ where: { id: payload.id, username: payload.username } });
+        const user = await db.users.findOne({ where: { id: payload.id, username: payload.username } });
     
-    //     if (!user) throw new Error('User not found');
+        if (!user) throw new Error('User not found');
         
-    //     // Tạo một token mới
-    //     const token = JWTHelper.signToken({ id: user.id, username: user.username });
+        const token = JWTHelper.signToken({ id: user.id, username: user.username });
+        const newRefreshToken = JWTHelper.signRefreshToken({ id: user.id, username: user.username });
         
-    //     // Tạo một refreshToken mới
-    //     const newRefreshToken = JWTHelper.signRefreshToken({ id: user.id, username: user.username });
-        
-    //     // Cập nhật cơ sở dữ liệu với refreshToken mới
-    //     await db.users.update(
-    //       { refreshToken: newRefreshToken },
-    //       { where: { id: user.id } }
-    //     );
+        await db.users.update(
+          { refreshToken: newRefreshToken },
+          { where: { id: user.id } }
+        );
     
-    //     // Trả về người dùng và token mới
-    //     const userWithoutPassword = {
-    //       ...user.toJSON(),
-    //       password: undefined,
-    //     };
+        res.cookie('refreshToken', refreshToken, { 
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict"
+        });
     
-    //     return {
-    //       user: userWithoutPassword,
-    //       token,
-    //       refreshToken: newRefreshToken,
-    //     };
-    //   } catch (error) {
-    //     throw new Error('Invalid refresh token');
-    //   }
-    // },
+        return { token };
+      } catch (error) {
+        throw new Error('Invalid refresh token');
+      }
+    },
 
-    //     logout: async (_, { token }) => {
-    //   try {
-    //     // Tìm người dùng dựa trên token
-    //     const user = await db.users.findOne({ where: { token } });
+    logout: async (_, __, { req, res }) => {
 
-    //     if (!user) throw new ApolloError('User not found', 'USER_NOT_FOUND');
+      try {
+        const user = await db.users.findOne({ where: {id: req.user.id } });
+
+        if (!user) throw new ApolloError('User not found', 'USER_NOT_FOUND');
         
-    //     // Xóa hoặc vô hiệu hóa token
-    //     await db.users.update(
-    //       { token: null, refreshToken: null }, // Hoặc { token: '', refreshToken: '' }
-    //       { where: { id: user.id } }
-    //     );
+        await db.users.update(
+          { token: null, refreshToken: null },
+          { where: { id: user.id } }
+        );
 
-    //     return {
-    //       success: true,
-    //       message: 'Successfully logged out',
-    //     };
-    //   } catch (error) {
-    //     throw new ApolloError('Logout failed', 'LOGOUT_FAILED');
-    //   }
-    // },
+        res.clearCookie("refreshToken");
+        return {
+          success: true,
+          message: 'Successfully logged out',
+        };
+      } catch (error) {
+        throw new ApolloError('Logout failed', 'LOGOUT_FAILED');
+      }
+    },
     
   },
 };

@@ -10,7 +10,7 @@ const course = require('./GraphQL/course');
 const question = require('./GraphQL/question');
 const subject = require('./GraphQL/subject');
 const user = require('./GraphQL/user');
-const authMiddleware = require('./middleware/authGuard');
+// const authMiddleware = require('./middleware/authGuard');
 
 const typeDefs = mergeTypeDefs([
   auth.typeDefs,

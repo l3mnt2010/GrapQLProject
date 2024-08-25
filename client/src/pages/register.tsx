@@ -77,7 +77,7 @@ return (
                 {...register('password', {
                   required: 'Password is Required',
                   minLength: {
-                    value: 8,
+                    value: 3,
                     message: 'Must be at least 8 characters',
                   },
                   maxLength: {

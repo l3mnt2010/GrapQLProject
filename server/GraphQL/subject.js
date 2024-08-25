@@ -1,8 +1,7 @@
 const { gql } = require('apollo-server-express');
-const { or, literal } = require('sequelize');
-const db = require('./../database');
+const { Op, literal } = require('sequelize');
+const db = require('./../database');  // Cấu hình Sequelize của bạn
 
-// Định nghĩa `typeDefs` và `resolvers` cho bảng `monhoc`
 const typeDefs = gql`
   type Monhoc {
     id: ID!
@@ -18,7 +17,7 @@ const typeDefs = gql`
   type Mutation {
     createMonhoc(ten_mon: String, khoa_id: Int): ID
     updateMonhoc(id: Int, ten_mon: String, khoa_id: Int): String
-    searchSubjectByName( firstName:String!,secondName: String!): [Monhoc!]!
+    searchSubjectByName(firstName: String!, lastName: String!): [Monhoc!]!
     deleteMonhoc(id: Int): String
   }
 `;
@@ -45,17 +44,19 @@ const resolvers = {
       });
       return 'Update Success!';
     },
-    searchSubjectByName: async (_, { firstName, secondName }) => {
+    searchSubjectByName: async (_, { firstName, lastName }) => {
       try {
         const subjects = await db.monhoc.findAll({
-          where: or(
-            literal(`soundex('ten_mon') = soundex(:firstName)`),
-            { secondName : secondName },
-          ),
+          where: {
+            [Op.or]: [
+              literal('soundex(ten_mon) = soundex(:firstName)'),
+              { ten_mon: lastName },
+            ],
+          },
           replacements: { firstName },
-        })
-
-        return subjects;  
+        });
+    
+        return subjects;
       } catch (error) {
         console.error('Error searching subjects:', error);
         throw new Error('Error searching subjects');
