@@ -74,7 +74,7 @@ export const logOutUser = async(token: string, navigate : any) => {
                                                                 },
                                                             }
                                                         )
-
+                                                        
                                                         return response.data.data.logout;
                                 }
                                 catch (err : any) {

@@ -8,7 +8,7 @@ interface CourseDetailType {
 
 const CourseDetail:React.FC<CourseDetailType> = ({image, name}) => {
   return (
-    <div className='w-64 rounded-lg shadow-2xl text-white overflow-hidden mt-5 bg-cyan-500 bg-opacity-5 transition-transform duration-300 ease-in-out transform hover:scale-105'>
+    <div className='w-64 rounded-l shadow-2xl h-64 overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-105'>
       <img 
         src={img1} 
         alt={name}  

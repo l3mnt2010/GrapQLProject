@@ -25,6 +25,7 @@ const authSlide = createSlice({
       },
       loginFailure: (state) => {
        state.login.isFetching = false;
+       state.login.currentUser = null;
        state.login.error = true;
       },
 

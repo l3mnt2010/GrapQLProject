@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import avt from './../../assets/images/Rectangle41.png'
 import { logOutUser } from '../../utils/api';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from '../../redux/store';
+import { loginFailure } from '../../redux/slide/authSlide';
 
 interface PropsUserName {
     username: string;
@@ -12,6 +14,7 @@ interface PropsUserName {
 
 const DropDown:React.FC<PropsUserName> = ({ username, token }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isOpenDropDown, setDropDown] = useState(false);
   const handleDropDown = () => {
       setDropDown(!isOpenDropDown);
@@ -21,6 +24,7 @@ const DropDown:React.FC<PropsUserName> = ({ username, token }) => {
     try {
       const response: any = await logOutUser(token, navigate);
       if (await response.success) {
+        dispatch(loginFailure());
         toast.clearWaitingQueue();
         toast('Logout success!', { type: 'success' });
         navigate("/login");

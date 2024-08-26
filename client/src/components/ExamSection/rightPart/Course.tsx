@@ -28,7 +28,7 @@ const Course = () => {
   return (
     <div className="w-full h-full">
       <NavBar />
-    <div className='grid h-4/5 grid-cols-3 gap-10 pl-20 overflow-y-scroll'>
+    <div className='grid h-4/5 grid-cols-3 gap-10 pl-20 pt-10 overflow-y-scroll'>
         {courses?.khoahocs?.map((course: any) =><CourseDetail name={course.ten_khoa} />)}  
     </div>
     </div>
