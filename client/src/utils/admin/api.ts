@@ -2,11 +2,17 @@
 import { getUserFailure, getUserStart, getUserSuccess } from "../../redux/slide/userSlide";
 import {URL} from "../baseURL";
 
-export const getAllUser = async() => {
+export const getAllUser = async(token: string) => {
                 try {
                                          const response = await URL.post('/graphql', {
                                                 query: `query { users { id username admin } }`
-                                            })
+                                            },
+                                            {
+                                                headers: {
+                                                    Authorization: `Bearer ${token}`,
+                                                },
+                                            }
+                                        )
                                          return response.data.data;
                 }
                 catch (err : any) {
@@ -70,15 +76,21 @@ export const editDetailUser = async(user: any, dispatch: any, navigate : any) =>
 }
 
 
-export const deleteDetailUser = async(id: string) => {
+export const deleteDetailUser = async(id: string, token: string) => {
     try {
                              const response = await URL.post('/graphql', {
-                                    query: `mutation($id: Int!) { deleteUser(id: $id) }`,
+                                    query: `mutation($id: Int!) { deleteUser(id: $id) {success message} }`,
                                         variables: {
                                         'id': Number(id)
                                           }
-                                })
-                            return response;  
+                                },
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    },
+                                }
+                            )
+                            return response.data.data;  
     }
     catch (err : any) {
     }

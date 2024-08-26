@@ -10,19 +10,13 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const {register, handleSubmit, formState: { errors }} = useForm<any>({ reValidateMode: 'onBlur' });
                                                                             
-                                                                              const onSubmit = async (data: any) => {
-                                                                                console.log(data);
-                                                                                try {
-                                                                                  registerUser(data, dispatch, navigate);
-                                                                                  toast.clearWaitingQueue();
-                                                                                  toast('Account created!', { type: 'success' });
-                                                                                  navigate("/login");
-                                                                                } catch (err) {
-                                                                                  console.log(err);
-                                                                                  toast.clearWaitingQueue();
-                                                                                  toast('Error creating user', { type: 'error'});
-                                                                                }
-                                                                              };
+  const onSubmit = async (data: any) => {
+    try {
+        registerUser(data, dispatch, navigate, toast);
+        } catch (err) {
+
+        }
+  };
 return (
  <motion.div
      initial={{ opacity: 0, scale: 0.5 }}

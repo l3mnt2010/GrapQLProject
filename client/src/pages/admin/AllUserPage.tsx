@@ -10,7 +10,7 @@ const AllUserPage = () => {
         <LeftSection />
       </div>
 
-      <div className="w-full h-full ">
+      <div className="w-full overscroll-auto h-full ">
           <UserTable />
       </div>
     </div></div>

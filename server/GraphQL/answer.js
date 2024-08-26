@@ -25,29 +25,29 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     phuongans: async () => db.phuongan.findAll(),
-    phuongan: async (obj, args) => db.phuongan.findByPk(args.id),
+    phuongan: async (_, __) => db.phuongan.findByPk(__.id),
   },
   Mutation: {
-    createPhuongan: async (root, args) => {
+    createPhuongan: async (root, __) => {
       const phuongan = await db.phuongan.create({
-        noi_dung: args.noi_dung,
-        dung: args.dung,
-        cau_hoi_id: args.cau_hoi_id,
+        noi_dung: __.noi_dung,
+        dung: __.dung,
+        cau_hoi_id: __.cau_hoi_id,
       });
       return phuongan.id;
     },
-    updatePhuongan: async (root, args) => {
+    updatePhuongan: async (root, __) => {
       await db.phuongan.update({
-        noi_dung: args.noi_dung,
-        dung: args.dung,
-        cau_hoi_id: args.cau_hoi_id,
+        noi_dung: __.noi_dung,
+        dung: __.dung,
+        cau_hoi_id: __.cau_hoi_id,
       }, {
-        where: { id: args.id },
+        where: { id: __.id },
       });
       return 'Update Success!';
     },
-    deletePhuongan: async (root, args) => {
-      await db.phuongan.destroy({ where: { id: args.id } });
+    deletePhuongan: async (root, __) => {
+      await db.phuongan.destroy({ where: { id: __.id } });
       return 'Delete success!';
     }
   }

@@ -21,7 +21,6 @@ const authSlide = createSlice({
       loginSuccess: (state, action: any) => {
         state.login.isFetching = false;
         state.login.currentUser = action.payload.login;
-        console.log(action.payload.login, "đây là user hiện tịa mà bạn đang đăng nhập");
         state.login.error = false;
       },
       loginFailure: (state) => {

@@ -1,16 +1,33 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import avt from './../../assets/images/Rectangle41.png'
+import { logOutUser } from '../../utils/api';
+import { toast } from 'react-toastify';
 
 interface PropsUserName {
     username: string;
     img?: string;
+    token: string;
 }
 
-const DropDown:React.FC<PropsUserName> = ({ username }) => {
+const DropDown:React.FC<PropsUserName> = ({ username, token }) => {
+  const navigate = useNavigate();
   const [isOpenDropDown, setDropDown] = useState(false);
   const handleDropDown = () => {
       setDropDown(!isOpenDropDown);
+  }
+
+  const handleLogout = async (token: string) => {
+    try {
+      const response: any = await logOutUser(token, navigate);
+      if (await response.success) {
+        toast.clearWaitingQueue();
+        toast('Logout success!', { type: 'success' });
+        navigate("/login");
+      }
+    } catch (err) {
+        
+    }
   }
   return (
     <div className=''>
@@ -33,7 +50,7 @@ const DropDown:React.FC<PropsUserName> = ({ username }) => {
           </li>
         </ul>
         <div className="py-2">
-          <Link to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
+          <button onClick={()=>handleLogout(token)} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</button>
         </div>
     </div>
     </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 21, 2024 at 06:01 PM
+-- Generation Time: Aug 26, 2024 at 02:57 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -33,6 +33,32 @@ CREATE TABLE `cauhoi` (
   `mon_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `cauhoi`
+--
+
+INSERT INTO `cauhoi` (`id`, `noi_dung`, `mon_id`) VALUES
+(1, 'Chuyên đề hàm số: Cho hàm số y = 2x^3 - 3x^2 + 1. Đạo hàm của hàm số tại điểm x = 1 là gì?', 1),
+(2, 'Chuyên đề tổ hợp: Có bao nhiêu cách sắp xếp 4 người vào 4 ghế?', 1),
+(3, 'Chuyên đề hình học không gian: Diện tích toàn phần của hình lập phương có cạnh bằng 3 là bao nhiêu?', 1),
+(4, 'Chuyên đề phương trình: Nghiệm của phương trình x^2 - 4x + 4 = 0 là gì?', 1),
+(5, 'Chuyên đề tích phân: Tích phân ∫0^1 x^2 dx có giá trị là bao nhiêu?', 1),
+(6, 'Chuyên đề xác suất: Xác suất để tung một con xúc xắc và ra số chẵn là bao nhiêu?', 1),
+(7, 'Chuyên đề hệ phương trình: Giải hệ phương trình x + y = 5, 2x - y = 1. Giá trị của x là bao nhiêu?', 1),
+(8, 'Chuyên đề hình học phẳng: Trong tam giác đều, mỗi góc có độ lớn là bao nhiêu?', 1),
+(9, 'Chuyên đề logarit: Giải phương trình log_2(x + 1) = 3. Giá trị của x là bao nhiêu?', 1),
+(10, 'Chuyên đề số phức: Số phức nào sau đây có mô-đun bằng 5?', 1),
+(11, 'What is the past tense of \"go\"?', 3),
+(12, 'Which word is a synonym for \"happy\"?', 3),
+(13, 'How do you say \"hello\" in French?', 3),
+(14, 'What is the plural form of \"child\"?', 3),
+(15, 'Complete the sentence: She ___ to the store yesterday.', 3),
+(16, 'Which of the following is a noun?', 3),
+(17, 'What does \"bilingual\" mean?', 3),
+(18, 'What is the opposite of \"difficult\"?', 3),
+(19, 'Choose the correct article: ___ apple a day.', 3),
+(20, 'Which of these is a preposition?', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -43,6 +69,16 @@ CREATE TABLE `khoahoc` (
   `id` int NOT NULL,
   `ten_khoa` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `khoahoc`
+--
+
+INSERT INTO `khoahoc` (`id`, `ten_khoa`) VALUES
+(1, 'AT19'),
+(2, 'AT20'),
+(3, 'AT18'),
+(4, 'AT21');
 
 -- --------------------------------------------------------
 
@@ -56,6 +92,22 @@ CREATE TABLE `monhoc` (
   `khoa_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `monhoc`
+--
+
+INSERT INTO `monhoc` (`id`, `ten_mon`, `khoa_id`) VALUES
+(1, 'Toán Chuyên Đề', 1),
+(2, 'Hệ quản trị cơ sở dữ liệu', 1),
+(3, 'Tiếng Anh 3', 1),
+(4, 'Cấu trúc dữ liệu và giải thuật', 1),
+(5, 'Kỹ thuật truyền số liệu', 1),
+(6, 'Nguyên lý hệ điều hành', 1),
+(7, 'An toàn mạng không dây và di động', 3),
+(8, 'An toàn mạng máy tính', 3),
+(9, 'Chuyên đề Kỹ nghệ an toàn mạng', 3),
+(10, 'Công nghệ web an toàn', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -68,6 +120,92 @@ CREATE TABLE `phuongan` (
   `dung` tinyint(1) NOT NULL,
   `cau_hoi_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `phuongan`
+--
+
+INSERT INTO `phuongan` (`id`, `noi_dung`, `dung`, `cau_hoi_id`) VALUES
+(1, '6', 1, 1),
+(2, '-6', 0, 1),
+(3, '4', 0, 1),
+(4, '8', 0, 1),
+(5, '24', 1, 2),
+(6, '12', 0, 2),
+(7, '30', 0, 2),
+(8, '20', 0, 2),
+(9, '27', 1, 3),
+(10, '12', 0, 3),
+(11, '18', 0, 3),
+(12, '36', 0, 3),
+(13, '2', 1, 4),
+(14, '1', 0, 4),
+(15, '3', 0, 4),
+(16, '4', 0, 4),
+(17, '1/3', 1, 5),
+(18, '1/2', 0, 5),
+(19, '2/3', 0, 5),
+(20, '1/4', 0, 5),
+(21, '1/2', 1, 6),
+(22, '1/3', 0, 6),
+(23, '2/3', 0, 6),
+(24, '1/6', 0, 6),
+(25, '3', 1, 7),
+(26, '4', 0, 7),
+(27, '2', 0, 7),
+(28, '5', 0, 7),
+(29, '60 độ', 1, 8),
+(30, '45 độ', 0, 8),
+(31, '90 độ', 0, 8),
+(32, '120 độ', 0, 8),
+(33, '7', 1, 9),
+(34, '5', 0, 9),
+(35, '6', 0, 9),
+(36, '8', 0, 9),
+(37, '5 + 0i', 1, 10),
+(38, '4 + 3i', 0, 10),
+(39, '3 + 4i', 0, 10),
+(40, '5 + 2i', 0, 10),
+(41, 'Went', 1, 1),
+(42, 'Goes', 0, 1),
+(43, 'Going', 0, 1),
+(44, 'Gone', 0, 1),
+(45, 'Joyful', 1, 2),
+(46, 'Sad', 0, 2),
+(47, 'Angry', 0, 2),
+(48, 'Tired', 0, 2),
+(49, 'Bonjour', 1, 3),
+(50, 'Hola', 0, 3),
+(51, 'Ciao', 0, 3),
+(52, 'Hallo', 0, 3),
+(53, 'Children', 1, 4),
+(54, 'Childs', 0, 4),
+(55, 'Childes', 0, 4),
+(56, 'Childrens', 0, 4),
+(57, 'Went', 1, 5),
+(58, 'Go', 0, 5),
+(59, 'Going', 0, 5),
+(60, 'Gone', 0, 5),
+(61, 'Book', 1, 6),
+(62, 'Quickly', 0, 6),
+(63, 'Run', 0, 6),
+(64, 'Happy', 0, 6),
+(65, 'Able to speak two languages', 1, 7),
+(66, 'A person who speaks one language', 0, 7),
+(67, 'A type of food', 0, 7),
+(68, 'A type of animal', 0, 7),
+(69, 'Easy', 1, 8),
+(70, 'Hard', 0, 8),
+(71, 'Complicated', 0, 8),
+(72, 'Challenging', 0, 8),
+(73, 'An', 1, 9),
+(74, 'The', 0, 9),
+(75, 'A', 0, 9),
+(76, 'Some', 0, 9),
+(77, 'In', 1, 10),
+(78, 'Quickly', 0, 10),
+(79, 'Happily', 0, 10),
+(80, 'Beautifully', 0, 10);
 
 -- --------------------------------------------------------
 
@@ -83,6 +221,24 @@ CREATE TABLE `users` (
   `token` text,
   `refreshToken` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `admin`, `token`, `refreshToken`) VALUES
+(1, 'administrator', 'administratoR321123', 1, NULL, NULL),
+(2, 'l3mnt2010', 'l3mnt2010L3mNt2010', 1, NULL, NULL),
+(3, 'user001', 'Passw0rd!001', 0, NULL, NULL),
+(4, 'user002', 'Passw0rd!002', 0, NULL, NULL),
+(5, 'user003', 'Passw0rd!003', 0, NULL, NULL),
+(6, 'user004', 'Passw0rd!004', 0, NULL, NULL),
+(7, 'user005', 'Passw0rd!005', 0, NULL, NULL),
+(8, 'user006', 'Passw0rd!006', 0, NULL, NULL),
+(9, 'user007', 'Passw0rd!007', 0, NULL, NULL),
+(10, 'user008', 'Passw0rd!008', 0, NULL, NULL),
+(11, 'user009', 'Passw0rd!009', 0, NULL, NULL),
+(12, 'user010', 'Passw0rd!010', 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -120,7 +276,9 @@ ALTER TABLE `phuongan`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `username_2` (`username`),
+  ADD UNIQUE KEY `username_3` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -130,31 +288,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cauhoi`
 --
 ALTER TABLE `cauhoi`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `khoahoc`
 --
 ALTER TABLE `khoahoc`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `monhoc`
 --
 ALTER TABLE `monhoc`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `phuongan`
 --
 ALTER TABLE `phuongan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables

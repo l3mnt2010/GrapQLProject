@@ -23,29 +23,56 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    cauhois: async () => db.cauhoi.findAll(),
-    cauhoi: async (obj, args) => db.cauhoi.findByPk(args.id),
+    cauhois: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        return db.cauhoi.findAll();
+       } catch(err) {
+        return "nope";
+       }
+      },
+    cauhoi: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        return db.cauhoi.findByPk(__.id);}
+      catch(err) {
+        return "nope";
+      }
+      }
+
   },
   Mutation: {
-    createCauhoi: async (root, args) => {
+    createCauhoi: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
       const cauhoi = await db.cauhoi.create({
-        noi_dung: args.noi_dung,
-        mon_id: args.mon_id,
+        noi_dung: __.noi_dung,
+        mon_id: __.mon_id,
       });
       return cauhoi.id;
+      }
+      catch (err) {return "nope"};
     },
-    updateCauhoi: async (root, args) => {
-      await db.cauhoi.update({
-        noi_dung: args.noi_dung,
-        mon_id: args.mon_id,
+    updateCauhoi: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        await db.cauhoi.update({
+        noi_dung: __.noi_dung,
+        mon_id: __.mon_id,
       }, {
-        where: { id: args.id },
+        where: { id: __.id },
       });
       return 'Update Success!';
+    }
+    catch (err) {return "nope"};
     },
-    deleteCauhoi: async (root, args) => {
-      await db.cauhoi.destroy({ where: { id: args.id } });
-      return 'Delete success!';
+    deleteCauhoi: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        await db.cauhoi.destroy({ where: { id: __.id } });
+        return 'Delete success!';
+      }
+      catch (err) {return "nope"};
     }
   }
 };

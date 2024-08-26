@@ -22,27 +22,51 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    khoahocs: async () => db.khoahoc.findAll(),
-    khoahoc: async (obj, args) => db.khoahoc.findByPk(args.id),
+    khoahocs: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        return db.khoahoc.findAll()
+      }
+      catch (err) {return "nope"}
+    },
+    khoahoc: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        return db.khoahoc.findByPk(args.id)
+      }
+      catch (err) {return "nope"};
+    },
   },
   Mutation: {
-    createKhoahoc: async (root, args) => {
+    createKhoahoc: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
       const khoahoc = await db.khoahoc.create({
         ten_khoa: args.ten_khoa,
       });
       return khoahoc.id;
+    }
+    catch (err) {return "nope"};
     },
-    updateKhoahoc: async (root, args) => {
+    updateKhoahoc: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
       await db.khoahoc.update({
         ten_khoa: args.ten_khoa,
       }, {
         where: { id: args.id },
       });
       return 'Update Success!';
+    }
+      catch (err) {return "nope"};
     },
-    deleteKhoahoc: async (root, args) => {
-      await db.khoahoc.destroy({ where: { id: args.id } });
-      return 'Delete success!';
+    deleteKhoahoc: async (_, __, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        await db.khoahoc.destroy({ where: { id: args.id } });
+        return 'Delete success!';
+      }
+      catch (err) {return "nope"};
     }
   }
 };

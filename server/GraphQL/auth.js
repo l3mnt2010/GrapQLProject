@@ -3,10 +3,6 @@ const JWTHelper = require('./../helpers/JWTHelper');
 const db = require('./../database');
 
 const typeDefs = gql`
-  type Query {
-    me: User
-  }
-
   type Mutation {
     login(username: String!, password: String!): AuthPayload
     register(username: String!, password: String!): RegisterResponse
@@ -26,7 +22,7 @@ const typeDefs = gql`
   }
   
   type LogoutResponse { 
-    success: String!
+    success: Boolean!
     message: String!
   }
   
@@ -42,10 +38,10 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    me: async (_, __, { user }) => {
-      if (!user) throw new Error('Not authenticated');
-      return db.users.findByPk(user.id);
-    },
+    // me: async (_, __, { user }) => {
+    //   if (!user) throw new Error('Not authenticated');
+    //   return db.users.findByPk(user.id);
+    // },
   },
   Mutation: {
     login: async (_, { username, password }, { req, res }) => {
@@ -55,13 +51,20 @@ const resolvers = {
         if (!user) throw new Error('User not found');
         if (user.password !== password) throw new Error('Invalid password');
   
-        const token = JWTHelper.signToken({ id: user.id, username });
-        const refreshToken = JWTHelper.signRefreshToken({ id: user.id, username });
+        const token = JWTHelper.signToken({ id: user.id, username, admin: user.admin });
+        const refreshToken = JWTHelper.signRefreshToken({ id: user.id, username, admin: user.admin });
   
         await db.users.update(
           { token, refreshToken },
           { where: { id: user.id } }
         );
+
+        res.cookie('accessToken', token, { 
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict"
+        });
 
         res.cookie('refreshToken', refreshToken, { 
           httpOnly: true,
@@ -73,6 +76,7 @@ const resolvers = {
         const userInformation = {
           id: user.id,
           username: user.username,
+          admin: user.admin
         };
   
         return {
@@ -97,10 +101,13 @@ const resolvers = {
       }
     },
 
-    refreshToken: async (_, __, { req, res }) => {
-      const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) return res.status(401).json("you are not authentacate");
+    refreshToken: async (_, __, {req, res}) => {
+      
       try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+        const refreshToken = req.user;
+        if (!refreshToken) return res.status(401).json("you are not authenticate");
+
         const payload = JWTHelper.verifyRefreshToken(refreshToken);
         
         const user = await db.users.findOne({ where: { id: payload.id, username: payload.username } });
@@ -129,8 +136,9 @@ const resolvers = {
     },
 
     logout: async (_, __, { req, res }) => {
-
       try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+
         const user = await db.users.findOne({ where: {id: req.user.id } });
 
         if (!user) throw new ApolloError('User not found', 'USER_NOT_FOUND');
@@ -141,12 +149,16 @@ const resolvers = {
         );
 
         res.clearCookie("refreshToken");
+        res.clearCookie("accessToken");
         return {
           success: true,
           message: 'Successfully logged out',
         };
       } catch (error) {
-        throw new ApolloError('Logout failed', 'LOGOUT_FAILED');
+        return {
+          success: false,
+          message: 'Failed logged out',
+        };
       }
     },
     

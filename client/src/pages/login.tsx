@@ -16,10 +16,8 @@ const LoginPage = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      loginUser(data, dispatch, navigate);
-      toast.clearWaitingQueue();
-      toast('Login success!', { type: 'success' });
-      navigate("/dashboard/course");
+      loginUser(data, dispatch, navigate, toast );
+    
     } catch (err) { 
       toast.clearWaitingQueue();
       toast('Username or password incorrect', { type: 'error'});

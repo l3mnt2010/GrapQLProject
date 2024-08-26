@@ -24,47 +24,78 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    monhocs: async () => db.monhoc.findAll(),
-    monhoc: async (obj, args) => db.monhoc.findByPk(args.id),
+    monhocs: async (_, __,{req, res}) =>{
+     try {
+      if(!req.user || !req.user.username || !req.user.id) return "nope";
+      return db.monhoc.findAll();
+     } 
+     catch(err) {
+       return "nope";
+     }
+    },
+    monhoc: async (_, __,{req, res}) =>{
+      try {
+       if(!req.user || !req.user.username || !req.user.id) return "nope";
+       return db.monhoc.findByPk(args.id);
+      } catch (err) {
+        return "nope";
+      }},
   },
   Mutation: {
-    createMonhoc: async (root, args) => {
-      const monhoc = await db.monhoc.create({
+    createMonhoc: async (_, __,{req, res}) =>{
+      try {
+       if(!req.user || !req.user.username || !req.user.admin) return "nope";
+       const monhoc = await db.monhoc.create({
         ten_mon: args.ten_mon,
         khoa_id: args.khoa_id,
       });
       return monhoc.id;
+    }
+      catch(err) {
+        return "nope";
+      }
     },
-    updateMonhoc: async (root, args) => {
-      await db.monhoc.update({
+    updateMonhoc: async (_, __,{req, res}) =>{
+      try {
+       if(!req.user || !req.user.username || !req.user.admin) return "nope";
+       await db.monhoc.update({
         ten_mon: args.ten_mon,
         khoa_id: args.khoa_id,
       }, {
         where: { id: args.id },
       });
-      return 'Update Success!';
+      return 'Update Success!';}
+      catch(err) {
+        return "nope";
+      }
     },
-    searchSubjectByName: async (_, { firstName, lastName }) => {
+    searchSubjectByName: async (_, __, {req, res}) => {
       try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
         const subjects = await db.monhoc.findAll({
           where: {
             [Op.or]: [
               literal('soundex(ten_mon) = soundex(:firstName)'),
-              { ten_mon: lastName },
+              { ten_mon: __.lastName },
             ],
           },
-          replacements: { firstName },
+          replacements: { firstName : __.firstName },
         });
     
         return subjects;
+        
       } catch (error) {
-        console.error('Error searching subjects:', error);
-        throw new Error('Error searching subjects');
+        return "nope";
       }
     },
-    deleteMonhoc: async (root, args) => {
-      await db.monhoc.destroy({ where: { id: args.id } });
-      return 'Delete success!';
+    deleteMonhoc: async (_, __,{req, res}) =>{
+      try {
+       if(!req.user || !req.user.username || !req.user.admin) return "nope";
+       await db.monhoc.destroy({ where: { id: args.id } });
+       return 'Delete success!';
+      } catch (error){
+       return "nope"
+      }
     }
   }
 };

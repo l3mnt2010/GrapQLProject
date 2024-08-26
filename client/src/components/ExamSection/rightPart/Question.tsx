@@ -1,64 +1,45 @@
-import React from "react";
-import NavBar from "../../Navbar/NavBar";
+import { useEffect, useState } from 'react'
+import NavBar from '../../Navbar/NavBar'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { useNavigate } from 'react-router-dom';
+import DetailQuestion from '../../DetailQuestion/DetailQuestion';
+import { getAllQuestions } from '../../../utils/api';
 
 const Question = () => {
+  const user: any = useSelector((state: RootState)=> state.auth.login.currentUser);
+  const [questions, setQuestion] = useState<any>([]);
+  const navigate = useNavigate();
+  const fetchAllQuestions = async (token: string) => {
+    try {
+      const response = getAllQuestions(token);
+      setQuestion(await response);
+    } catch (err) {
+    } finally {
+    }
+  };
+  useEffect(() => {
+    if(user) {fetchAllQuestions(user.token)}
+    else {
+      navigate("/login");
+    };
+  }, []);
+  
   return (
     <div className="w-full h-full">
       <NavBar />
-      <div className="bg-white pt-32">
-        <div className="mb-4">
-          <p className="text-gray-800 font-bold">
-          Câu 1:    A can lay railway track between two given stations in 16 days and B
-            can do the same job in 12 days. With the help of C, they did the job
-            in 4 days only. Then, C alone can do the job in:
-          </p>
+    <div className='h-4/5 pl-20 overflow-y-scroll'>
+    {questions?.cauhois?.map((question: any, index: number) => (
+    <DetailQuestion 
+        key={index} 
+        number={index + 1} 
+        question={question.noi_dung} 
+    />
+))}
 
-          <div className="mt-4">
-            <fieldset>
-              <div className="flex text-black flex-col space-y-2">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    className="mr-2"
-                  />
-                  Female
-                </label>
-                <label className="flex text-black items-center">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    className="mr-2"
-                  />
-                  Male
-                </label>
-                <label className="flex text-black items-center">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="other"
-                    className="mr-2"
-                  />
-                  Other
-                </label>
-                <label className="flex text-black items-center">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="other"
-                    className="mr-2"
-                  />
-                  Other
-                </label>
-              </div>
-            </fieldset>
-          </div>
-        </div>
-      </div>
     </div>
-  );
-};
+    </div>
+  )
+}
 
-export default Question;
+export default Question

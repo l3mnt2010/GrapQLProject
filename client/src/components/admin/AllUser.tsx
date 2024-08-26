@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { deleteDetailUser, getAllUser } from '../../utils/admin/api';
 import NavBar from '../Navbar/NavBar';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 
 interface User {
@@ -11,17 +14,14 @@ interface User {
   avatar?: string;
 }
 
-interface UserTableProps {
-  users: User[];
-}
-
 const UserTable = () => {
-  const [users, setUsers] = useState<any>([]);
-  
-  const handleDeleteUser = async (id: string) => {
-     const res = await deleteDetailUser(id);
-     if (res?.status === 200){
-      fetchUsers();
+  const currentUser: any = useSelector((state: RootState)=> state.auth.login.currentUser);
+  const [users, setAllUsers] = useState<any>([]);
+  const navigate = useNavigate();
+  const handleDeleteUser = async (id: string, token: string) => {
+     const res = await deleteDetailUser(id, token);
+     if (res.deleteUser.success === true){
+      fetchUsers(currentUser.token);
       toast.clearWaitingQueue();
       toast('Delete success!', { type: 'success' });
      } else {
@@ -31,30 +31,34 @@ const UserTable = () => {
      
   }
 
-  const fetchUsers = async () => {
-                                        try {
-                                          const response = getAllUser();
-                                          setUsers(await response);
-                                        } catch (err) {
-                                        } finally {
-                                        }
+  const fetchUsers = async (token: string) => {
+     try {
+     const response = getAllUser(token);
+     setAllUsers(await response);
+     } catch (err) {
+     } finally {
+     }
 };
 
   useEffect(() => {
-    fetchUsers();
+   if(currentUser){ fetchUsers(currentUser.token)}
+   else{
+    navigate("/login")
+   };
   }, []);
+
   return (                              
     <div className="w-full h-full">
       <NavBar />
-    <div className="block w-full overflow-x-auto pl-40 pt-28">
+    <div className="block w-full h-4/5 overflow-y-scroll pl-40">
       <div className='flex'>
       <h1 className='text-blue-600 font-bold text-3xl mb-5'>All user</h1>
-      <button
+      {/* <button
               type="submit"
               className="flex h-10 ml-[65%] items-center p-2 justify-center rounded-lg bg-brand py-2 font-medium transition ease-in hover:bg-d-brand-hover"
             >
               Add new user
-            </button>
+            </button> */}
       </div>
       <table className="items-center w-full bg-transparent border-collapse">
         <thead>
@@ -67,7 +71,7 @@ const UserTable = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {users?.users?.map((user: { id: any | null | undefined; username: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; admin: number; }) => (
+          {users?.users?.map((user: any) => (
             <tr key={user.id} className="text-gray-500">
               <th className="border-t-0 align-middle text-sm font-normal whitespace-nowrap p-4 pb-0 text-left">{user.id}</th>
               <th className="border-t-0 align-middle text-sm font-normal whitespace-nowrap p-4 pb-0 text-left">{user.username}</th>
@@ -79,7 +83,7 @@ const UserTable = () => {
               </td>
               <td className="border-t-0 align-middle text-xs whitespace-nowrap p-4 pb-0">
                 <button className="btn bg-red-600 hover:bg-red-700 text-white text-sm font-medium uppercase py-2 px-4 rounded transition duration-200">
-                  <button onClick={()=>handleDeleteUser(user.id)}>Delete</button>
+                  <button onClick={()=>handleDeleteUser(user.id, currentUser.token)}>Delete</button>
                 </button>
               </td>
             </tr>

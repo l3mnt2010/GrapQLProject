@@ -11,15 +11,16 @@ import RootRoute from './pages/rootRoute';
 import CoursePage from './pages/CoursePage';
 import SubjectPage from './pages/SubjectPage';
 import AllUserPage from './pages/admin/AllUserPage';
+import QuestionPage from './pages/QuestionPage';
 
 function App() {
   return (
         <Routes>
           <Route path='/' element={<RootRoute />} />
-          <Route path='/dashboard/course' element={<CoursePage />} >
-          </Route>
+          <Route path='/dashboard/course' element={<CoursePage />} />
+          <Route path='/dashboard/question' element={<QuestionPage />} />
           <Route path='/dashboard/subject' element={<SubjectPage />} />
-          <Route path='/admin/allusers' element={<AllUserPage />} />
+          <Route path='/dashboard/alluser' element={<AllUserPage />} />
           <Route path='/home' element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />

@@ -10,7 +10,8 @@ const course = require('./GraphQL/course');
 const question = require('./GraphQL/question');
 const subject = require('./GraphQL/subject');
 const user = require('./GraphQL/user');
-// const authMiddleware = require('./middleware/authGuard');
+const { limitMiddleware, validateRequestMiddleware } = require('./middleware/MiddlewareLimit');
+const middlewareController = require('./middleware/authGuard');
 
 const typeDefs = mergeTypeDefs([
   auth.typeDefs,
@@ -33,7 +34,10 @@ const resolvers = mergeResolvers([
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ user: req.user, db })
+  context: ({ req, res }) => ({ req, res, user: req.user, db }),
+  formatError: (error) => {
+    return new Error('Internal server error');
+  },
 });
 
 const startServer = async () => {
@@ -51,13 +55,15 @@ try {
   app.use(cors({ origin: 'http://localhost:3000' }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  // app.use(authMiddleware());
+  app.use(limitMiddleware);
+  app.use(validateRequestMiddleware);
+  app.use(middlewareController.verifyTokenAndAuth())
+
   server.applyMiddleware({ app });
 
   app.use(function(req, res) {
     res.status(404).send({ message: 'Prohibit' });
   });
-  
 
   app.listen({ port: 4000 }, () => 
     console.log(`🚀 Server ready at http://localhost:4000/graphql`)
