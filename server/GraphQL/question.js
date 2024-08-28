@@ -101,7 +101,7 @@ const resolvers = {
         fs.mkdirSync(dirPath, { recursive: true });
       }
       return new Promise((resolve, reject) => {
-        fs.appendFile(filePath, `${content}\n\n`, (err) => {
+        fs.writeFile(filePath, `${content}\n\n`, (err) => {
           if (err) {
             reject(new Error('Error writing to file.'));
           }
