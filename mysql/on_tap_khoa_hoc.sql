@@ -228,7 +228,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `admin`, `token`, `refreshToken`) VALUES
 (1, 'administrator', 'administratoR321123', 1, NULL, NULL),
-(2, 'l3mnt2010', 'l3mnt2010L3mNt2010', 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJsM21udDIwMTAiLCJhZG1pbiI6MSwiaWF0IjoxNzI0ODIzNTkwLCJleHAiOjE3MjQ4MzA3OTB9.VC3S4Q8DteQONKKf-38U8w-H24vI3ax_GJcIIOyWEaE', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJsM21udDIwMTAiLCJhZG1pbiI6MSwiaWF0IjoxNzI0ODIzNTkwLCJleHAiOjE3MjU0MjgzOTB9.gsfLOUNWZIlEy6Q0Z6h0jgD8o1z2gN45kYjmxYVXV58'),
+(2, 'l3mnt2010', 'l3mnt2010L3mNt2010', 1, NULL, NULL),
 (3, 'user001', 'Passw0rd!001', 0, NULL, NULL),
 (4, 'user002', 'Passw0rd!002', 0, NULL, NULL),
 (5, 'user003', 'Passw0rd!003', 0, NULL, NULL),

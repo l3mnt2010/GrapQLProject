@@ -1,39 +1,48 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  db: # Defines the 'db' service for MySQL database
-    image: mysql:8.0 # Uses the MySQL 8.0 Docker image
-    environment: # Sets environment variables for the database configuration
-      - MYSQL_DATABASE=on_tap_khoa_hoc # Specifies the name of the database
-      - MYSQL_PASSWORD= # Sets the password for the MySQL user
-      - MYSQL_ROOT_PASSWORD= # Sets the root password for MySQL
-    networks:
-      - sameNetworkAsMysql # Connects the service to the 'sameNetworkAsMysql' network
+  mysql:
+    build:
+      context: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: on_tap_khoa_hoc
+      MYSQL_USER: lamnt2010
+      MYSQL_PASSWORD: lamnt2010
     ports:
-      - 3307:3306 # Maps the container's port 3306 to the host's port 3307
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
-  api: # Defines the 'api' service for the backend API
-    build: # Builds the backend API using the provided Dockerfile
-      context: ./server # Specifies the build context directory for the backend
-      dockerfile: Dockerfile # Specifies the Dockerfile to use for building the backend
+  backend:
+    build:
+      context: ./server
     ports:
-      - 4000:4000 # Maps the container's port 3000 to the host's port 3000
-    networks:
-      - sameNetworkAsMysql # Connects the service to the 'sameNetworkAsMysql' network
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=mysql://lamnt2010:lamnt2010@mysql:3306/on_tap_khoa_hoc
+      - PORT=3306
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=lamnt2010
+      - MYSQL_PASSWORD=lamnt2010
+      - MYSQL_DATABASE=on_tap_khoa_hoc                    
+      - SECRET_KEY=REDACTED
+      - REFRESH_SECRET_KEY=REDACTED
     depends_on:
-      - db # Specifies that the 'api' service depends on the 'db' service
+      mysql:
+        condition: service_healthy
+  
+  frontend:
+    build:
+      context: ./client
 
-  frontend: # Defines the 'frontend' service for the frontend app
-    restart: on-failure # Restarts the container if it fails
-    build: # Builds the frontend app using the provided Dockerfile
-      context: ./client # Specifies the build context directory for the frontend
     ports:
-      - 3000:3000 # Maps the container's port 3000 to the host's port 3001
-    networks:
-      - sameNetworkAsMysql # Connects the service to the 'sameNetworkAsMysql' network
-    depends_on:
-      - api # Specifies that the 'frontend' service depends on the 'api' service
+      - "3000:3000"
 
 networks:
-  sameNetworkAsMysql: # Defines the 'sameNetworkAsMysql' network
-    driver: bridge # Specifies the network driver as 'bridge'
+  app-network:
+    driver: bridge

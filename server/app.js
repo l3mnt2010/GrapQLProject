@@ -1,5 +1,5 @@
 const express = require('express');
-require('dotenv').config({path:'.env'});
+require('dotenv').config();
 const cors = require('cors');
 const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge');
 const { ApolloServer } = require('apollo-server-express');
@@ -42,16 +42,14 @@ const server = new ApolloServer({
 });
 
 const startServer = async () => {
-
+  await new Promise(resolve => setTimeout(resolve, 10000));
 try {
-   
+  
   await sequelize.authenticate();
   console.log('Connection has been established successfully.');
-
   await sequelize.sync({ alter: true });
   console.log('Database synchronized.');
   await server.start();
-  
   const app = express();
   app.use(cors({ origin: 'http://localhost:3000' }));
   app.use(express.json());

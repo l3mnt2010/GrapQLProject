@@ -1,23 +1,23 @@
-# pull official base image
-FROM node:13.12.0-alpine
+FROM node:20.10 AS build
 
-# set working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json yarn.lock ./
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-RUN npm install react-scripts@4.0.3 -g
+RUN yarn install
 
-# add app
-COPY . ./
+COPY . .
 
-# start app
-CMD ["npm", "start"]
+RUN yarn build
 
-# expose port
+FROM node:20.10
+
+WORKDIR /app
+
+COPY --from=build /app/build /app/build
+
+RUN yarn global add serve
+
 EXPOSE 3000
+
+CMD ["serve", "-s", "build", "-l", "3000"]
