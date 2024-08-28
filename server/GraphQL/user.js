@@ -1,7 +1,6 @@
 const { gql } = require('apollo-server-express');
 const db = require('./../database');
 
-// Định nghĩa `typeDefs` và `resolvers` cho bảng `users`
 const typeDefs = gql`
   type User {
     id: ID!

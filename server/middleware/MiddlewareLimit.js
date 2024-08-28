@@ -17,11 +17,11 @@ const limitMiddleware = (req, res, next) => {
 };
 
 const validateRequestMiddleware = (req, res, next) => {
-    if (req.method !== 'POST') {
+    if (req.method !== 'POST' && req.method !== 'GET') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
     const contentType = req.get('Content-Type');
-    if (contentType !== 'application/json') {
+    if (contentType !== 'application/json' && contentType != null) {
         return res.status(415).json({ error: 'Unsupported Media Type' });
     }
     next();

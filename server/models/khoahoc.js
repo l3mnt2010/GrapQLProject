@@ -1,4 +1,3 @@
-// models/khoahoc.js
 module.exports = (sequelize, DataTypes) => {
   const KhoaHoc = sequelize.define('khoahoc', {
     id: {

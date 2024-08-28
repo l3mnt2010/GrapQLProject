@@ -12,8 +12,8 @@ const Question = () => {
   const navigate = useNavigate();
   const fetchAllQuestions = async (token: string) => {
     try {
-      const response = getAllQuestions(token);
-      setQuestion(await response);
+      const response =await getAllQuestions(token);
+      setQuestion(response);
     } catch (err) {
     } finally {
     }
@@ -33,7 +33,8 @@ const Question = () => {
     <DetailQuestion 
         key={index} 
         number={index + 1} 
-        question={question.noi_dung} 
+        question={question.noi_dung}
+        answers = {question.phuongan} 
     />
 ))}
 

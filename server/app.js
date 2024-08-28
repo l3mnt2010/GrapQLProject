@@ -12,6 +12,7 @@ const subject = require('./GraphQL/subject');
 const user = require('./GraphQL/user');
 const { limitMiddleware, validateRequestMiddleware } = require('./middleware/MiddlewareLimit');
 const middlewareController = require('./middleware/authGuard');
+const routes = require('./routes/routes');
 
 const typeDefs = mergeTypeDefs([
   auth.typeDefs,
@@ -60,6 +61,8 @@ try {
   app.use(middlewareController.verifyTokenAndAuth())
 
   server.applyMiddleware({ app });
+
+  app.use("/", middlewareController.verifyTokenAndAuth(), routes);
 
   app.use(function(req, res) {
     res.status(404).send({ message: 'Prohibit' });

@@ -1,4 +1,3 @@
-// models/phuongan.js
 module.exports = (sequelize, DataTypes) => {
   const PhuA = sequelize.define('phuongan', {
     id: {

@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-express');
 const { Op, literal } = require('sequelize');
-const db = require('./../database');  // Cấu hình Sequelize của bạn
+const db = require('./../database');
 
 const typeDefs = gql`
   type Monhoc {

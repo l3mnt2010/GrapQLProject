@@ -8,8 +8,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		username: {
 			type: DataTypes.STRING(255),
-			allowNull: false,
-			unique: true
+			allowNull: false
 		},
 		password: {
 			type: DataTypes.STRING(255),
@@ -30,6 +29,12 @@ module.exports = function(sequelize, DataTypes) {
 		}
 	}, {
 		tableName: 'users',
-		timestamps: false
+		timestamps: false,
+		indexes: [
+			{
+				unique: true,
+				fields: ['username']
+			}
+		]
 	});
 };

@@ -81,6 +81,28 @@ export const logOutUser = async(token: string, navigate : any) => {
                                 }
                      }
 
+export const findSubjectBySound = async(firstName: string, token: string) => {
+                        try {
+                                                 const response = await URL.post('/graphql', {
+                                                        query: `mutation($firstName: String!, $lastName: String!) { searchSubjectByName(firstName: $firstName, lastName: $lastName) {id ten_mon}}`,
+                                                        variables:  {
+                                                            "firstName": firstName,
+                                                            "lastName":  "Math" 
+                                                        }
+                                                    },
+                                                    {
+                                                        headers: {
+                                                            Authorization: `Bearer ${token}`,
+                                                        },
+                                                    }
+                                                )
+                                                 return response.data.data;
+                        }
+                        catch (err : any) {
+                            
+                        }
+                    }
+
 
 export const getAllSubjects = async(token?: string) => {
                                 try {
@@ -125,7 +147,7 @@ export const getAllCourses = async(token?: string) => {
 export const getAllQuestions = async(token?: string) => {
                 try {
                     const response = await URL.post('/graphql', {
-                        query: `query { cauhois { id noi_dung } }`,
+                        query: `query { cauhois { id noi_dung phuongan { id noi_dung dung } } }`,
                     },
                     {
                         headers: {

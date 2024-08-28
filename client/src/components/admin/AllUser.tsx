@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { deleteDetailUser, getAllUser } from '../../utils/admin/api';
 import NavBar from '../Navbar/NavBar';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { verifyAdmin } from '../../utils/help';
 
-
-interface User {
-  id?: number;
-  username?: string;
-  admin?: number;
-  avatar?: string;
-}
+// interface User {
+//   id?: number;
+//   username?: string;
+//   admin?: number;
+//   avatar?: string;
+// }
 
 const UserTable = () => {
   const currentUser: any = useSelector((state: RootState)=> state.auth.login.currentUser);
@@ -40,10 +40,16 @@ const UserTable = () => {
      }
 };
 
+
   useEffect(() => {
-   if(currentUser){ fetchUsers(currentUser.token)}
+   if(currentUser && verifyAdmin(currentUser.token)){
+    toast.clearWaitingQueue();
+    toast('Well come admin', { type: 'success' });
+    fetchUsers(currentUser.token)}
    else{
-    navigate("/login")
+    toast.clearWaitingQueue();
+    toast('You not have permission to Access this page', { type: 'error' });
+    navigate("/dashboard/course")
    };
   }, []);
 
@@ -53,13 +59,13 @@ const UserTable = () => {
     <div className="block w-full h-4/5 overflow-y-scroll pl-40">
       <div className='flex'>
       <h1 className='text-blue-600 font-bold text-3xl mb-5'>All user</h1>
-      {/* <button
+      <button
               type="submit"
               className="flex h-10 ml-[65%] items-center p-2 justify-center rounded-lg bg-brand py-2 font-medium transition ease-in hover:bg-d-brand-hover"
             >
               Add new user
-            </button> */}
-      </div>
+            </button>
+      </div>{
       <table className="items-center w-full bg-transparent border-collapse">
         <thead>
           <tr>
@@ -89,7 +95,7 @@ const UserTable = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>}
     </div>
    </div>
   );

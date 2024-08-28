@@ -1,4 +1,3 @@
-// models/monhoc.js
 module.exports = (sequelize, DataTypes) => {
   const MonHoc = sequelize.define('monhoc', {
     id: {

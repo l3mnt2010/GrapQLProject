@@ -12,11 +12,13 @@ import CoursePage from './pages/CoursePage';
 import SubjectPage from './pages/SubjectPage';
 import AllUserPage from './pages/admin/AllUserPage';
 import QuestionPage from './pages/QuestionPage';
+import BlackNotePage from './pages/admin/BlackNotePage';
 
 function App() {
   return (
         <Routes>
           <Route path='/' element={<RootRoute />} />
+          <Route path='/dashboard/note' element={<BlackNotePage />} />
           <Route path='/dashboard/course' element={<CoursePage />} />
           <Route path='/dashboard/question' element={<QuestionPage />} />
           <Route path='/dashboard/subject' element={<SubjectPage />} />

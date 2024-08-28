@@ -305,6 +305,20 @@ export const deleteDetailQuestion = async(user: any, dispatch: any, navigate : a
     }
 }
 
+export const viewContentCreated = async(token: string) => {
+    try {
+                            await URL.get('/noteExam',
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    },
+                                }
+                            )
+    }
+    catch (err : any) {
+    }
+}
+
 
 
 export const createDetailAnswer = async(user: any, dispatch: any, navigate : any) => {
@@ -355,5 +369,26 @@ export const deleteDetailAnswer = async(user: any, dispatch: any, navigate : any
     }
     catch (err : any) {
         dispatch(getUserFailure());
+    }
+}
+
+export const createBlackNote = async(content: string, token: string) => {
+    try {
+                             const response = await URL.post('/graphql', {
+                                    query: `mutation($content: String!) { createNote(content: $content)}`,
+                                    variables: {
+                                        'content': content
+                                    }
+                                },
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    },
+                                }
+                            )
+                             return response.status;
+    }
+    catch (err : any) {
+        
     }
 }

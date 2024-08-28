@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 26, 2024 at 02:57 AM
+-- Generation Time: Aug 28, 2024 at 06:48 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -126,20 +126,20 @@ CREATE TABLE `phuongan` (
 --
 
 INSERT INTO `phuongan` (`id`, `noi_dung`, `dung`, `cau_hoi_id`) VALUES
-(1, '6', 1, 1),
+(1, '6', 0, 1),
 (2, '-6', 0, 1),
 (3, '4', 0, 1),
-(4, '8', 0, 1),
+(4, '8', 1, 1),
 (5, '24', 1, 2),
 (6, '12', 0, 2),
 (7, '30', 0, 2),
 (8, '20', 0, 2),
-(9, '27', 1, 3),
+(9, '27', 0, 3),
 (10, '12', 0, 3),
-(11, '18', 0, 3),
+(11, '18', 1, 3),
 (12, '36', 0, 3),
-(13, '2', 1, 4),
-(14, '1', 0, 4),
+(13, '2', 0, 4),
+(14, '1', 1, 4),
 (15, '3', 0, 4),
 (16, '4', 0, 4),
 (17, '1/3', 1, 5),
@@ -158,54 +158,54 @@ INSERT INTO `phuongan` (`id`, `noi_dung`, `dung`, `cau_hoi_id`) VALUES
 (30, '45 độ', 0, 8),
 (31, '90 độ', 0, 8),
 (32, '120 độ', 0, 8),
-(33, '7', 1, 9),
-(34, '5', 0, 9),
+(33, '7', 0, 9),
+(34, '5', 1, 9),
 (35, '6', 0, 9),
 (36, '8', 0, 9),
 (37, '5 + 0i', 1, 10),
 (38, '4 + 3i', 0, 10),
 (39, '3 + 4i', 0, 10),
 (40, '5 + 2i', 0, 10),
-(41, 'Went', 1, 1),
-(42, 'Goes', 0, 1),
-(43, 'Going', 0, 1),
-(44, 'Gone', 0, 1),
-(45, 'Joyful', 1, 2),
-(46, 'Sad', 0, 2),
-(47, 'Angry', 0, 2),
-(48, 'Tired', 0, 2),
-(49, 'Bonjour', 1, 3),
-(50, 'Hola', 0, 3),
-(51, 'Ciao', 0, 3),
-(52, 'Hallo', 0, 3),
-(53, 'Children', 1, 4),
-(54, 'Childs', 0, 4),
-(55, 'Childes', 0, 4),
-(56, 'Childrens', 0, 4),
-(57, 'Went', 1, 5),
-(58, 'Go', 0, 5),
-(59, 'Going', 0, 5),
-(60, 'Gone', 0, 5),
-(61, 'Book', 1, 6),
-(62, 'Quickly', 0, 6),
-(63, 'Run', 0, 6),
-(64, 'Happy', 0, 6),
-(65, 'Able to speak two languages', 1, 7),
-(66, 'A person who speaks one language', 0, 7),
-(67, 'A type of food', 0, 7),
-(68, 'A type of animal', 0, 7),
-(69, 'Easy', 1, 8),
-(70, 'Hard', 0, 8),
-(71, 'Complicated', 0, 8),
-(72, 'Challenging', 0, 8),
-(73, 'An', 1, 9),
-(74, 'The', 0, 9),
-(75, 'A', 0, 9),
-(76, 'Some', 0, 9),
-(77, 'In', 1, 10),
-(78, 'Quickly', 0, 10),
-(79, 'Happily', 0, 10),
-(80, 'Beautifully', 0, 10);
+(41, 'Went', 1, 11),
+(42, 'Go', 0, 11),
+(43, 'Going', 0, 11),
+(44, 'Gone', 0, 11),
+(45, 'Joyful', 1, 12),
+(46, 'Sad', 0, 12),
+(47, 'Angry', 0, 12),
+(48, 'Tired', 0, 12),
+(49, 'Bonjour', 1, 13),
+(50, 'Hola', 0, 13),
+(51, 'Ciao', 0, 13),
+(52, 'Hallo', 0, 13),
+(53, 'Children', 1, 14),
+(54, 'Childs', 0, 14),
+(55, 'Childes', 0, 14),
+(56, 'Childrens', 0, 14),
+(57, 'Went', 1, 15),
+(58, 'Go', 0, 15),
+(59, 'Going', 0, 15),
+(60, 'Gone', 0, 15),
+(61, 'Book', 1, 16),
+(62, 'Quickly', 0, 16),
+(63, 'Run', 0, 16),
+(64, 'Happy', 0, 16),
+(65, 'Able to speak two languages', 1, 17),
+(66, 'A person who speaks one language', 0, 17),
+(67, 'A type of food', 0, 17),
+(68, 'A type of animal', 0, 17),
+(69, 'Easy', 1, 18),
+(70, 'Hard', 0, 18),
+(71, 'Complicated', 0, 18),
+(72, 'Challenging', 0, 18),
+(73, 'An', 1, 19),
+(74, 'The', 0, 19),
+(75, 'A', 0, 19),
+(76, 'Some', 0, 19),
+(77, 'In', 1, 20),
+(78, 'Quickly', 0, 20),
+(79, 'Happily', 0, 20),
+(80, 'Beautifully', 0, 20);
 
 -- --------------------------------------------------------
 
@@ -228,17 +228,13 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `admin`, `token`, `refreshToken`) VALUES
 (1, 'administrator', 'administratoR321123', 1, NULL, NULL),
-(2, 'l3mnt2010', 'l3mnt2010L3mNt2010', 1, NULL, NULL),
+(2, 'l3mnt2010', 'l3mnt2010L3mNt2010', 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJsM21udDIwMTAiLCJhZG1pbiI6MSwiaWF0IjoxNzI0ODIzNTkwLCJleHAiOjE3MjQ4MzA3OTB9.VC3S4Q8DteQONKKf-38U8w-H24vI3ax_GJcIIOyWEaE', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJsM21udDIwMTAiLCJhZG1pbiI6MSwiaWF0IjoxNzI0ODIzNTkwLCJleHAiOjE3MjU0MjgzOTB9.gsfLOUNWZIlEy6Q0Z6h0jgD8o1z2gN45kYjmxYVXV58'),
 (3, 'user001', 'Passw0rd!001', 0, NULL, NULL),
 (4, 'user002', 'Passw0rd!002', 0, NULL, NULL),
 (5, 'user003', 'Passw0rd!003', 0, NULL, NULL),
 (6, 'user004', 'Passw0rd!004', 0, NULL, NULL),
 (7, 'user005', 'Passw0rd!005', 0, NULL, NULL),
-(8, 'user006', 'Passw0rd!006', 0, NULL, NULL),
-(9, 'user007', 'Passw0rd!007', 0, NULL, NULL),
-(10, 'user008', 'Passw0rd!008', 0, NULL, NULL),
-(11, 'user009', 'Passw0rd!009', 0, NULL, NULL),
-(12, 'user010', 'Passw0rd!010', 0, NULL, NULL);
+(14, 'l3mnt20102004', 'l3mnt2010L3mNt2010', 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -276,9 +272,7 @@ ALTER TABLE `phuongan`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `username_2` (`username`),
-  ADD UNIQUE KEY `username_3` (`username`);
+  ADD UNIQUE KEY `users_username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -312,7 +306,7 @@ ALTER TABLE `phuongan`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables

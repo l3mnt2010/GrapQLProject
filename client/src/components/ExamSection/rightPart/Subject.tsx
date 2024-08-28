@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import SubjectDetail from '../../DetailSubject/DetailSubject';
+import FindSubject from '../../DetailSubject/FindSubject';
 
 const Subject = () => {
   const user: any = useSelector((state: RootState)=> state.auth.login.currentUser);
@@ -28,8 +29,11 @@ const Subject = () => {
   return (
     <div className="w-full h-full">
       <NavBar />
-    <div className='grid h-4/5 grid-cols-3 gap-10 pl-20 overflow-y-scroll'>
+    <div>
+      <FindSubject />
+      <div className='grid h-4/5 grid-cols-3 gap-10 pl-20 overflow-y-scroll'>
         {subjects?.monhocs?.map((subject: any) =><SubjectDetail name={subject.ten_mon} />)}  
+      </div>
     </div>
     </div>
   )

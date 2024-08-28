@@ -1,12 +1,21 @@
 const { gql } = require('apollo-server-express');
 const db = require('./../database');
+const fs = require('fs');
+const path = require('path');
 
-// Định nghĩa `typeDefs` và `resolvers` cho bảng `cauhoi`
 const typeDefs = gql`
+  type PhuA {
+    id: ID!
+    noi_dung: String!
+    dung: Boolean!
+    cau_hoi_id: Int
+  }  
+
   type Cauhoi {
     id: ID!
     noi_dung: String!
     mon_id: Int
+    phuongan: [PhuA]
   }
 
   type Query {
@@ -18,6 +27,7 @@ const typeDefs = gql`
     createCauhoi(noi_dung: String, mon_id: Int): ID
     updateCauhoi(id: Int, noi_dung: String, mon_id: Int): String
     deleteCauhoi(id: Int): String
+    createNote(content: String!): String
   }
 `;
 
@@ -26,8 +36,11 @@ const resolvers = {
     cauhois: async (_, __, {req, res}) => {
       try {
         if(!req.user || !req.user.username || !req.user.id) return "nope";
-        return db.cauhoi.findAll();
-       } catch(err) {
+        return db.cauhoi.findAll({
+          include: [{ model: db.phuongan, as: 'phuongan' }]
+        });
+        }
+       catch(err) {
         return "nope";
        }
       },
@@ -73,7 +86,30 @@ const resolvers = {
         return 'Delete success!';
       }
       catch (err) {return "nope"};
+    },
+    createNote: async (_, { content }, {req, res}) => {
+      try {
+        if(!req.user || !req.user.username || !req.user.id) return "nope";
+      if (!content) {
+        throw new Error('Content is required.');
+      }
+
+      const dirPath = path.join(__dirname, '../utils');
+      const filePath = path.join(dirPath, 'data.txt');
+
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+      }
+      return new Promise((resolve, reject) => {
+        fs.appendFile(filePath, `${content}\n\n`, (err) => {
+          if (err) {
+            reject(new Error('Error writing to file.'));
+          }
+          resolve('Content has been saved to file.');
+        });
+      });
     }
+    catch (err) {return "nope"}}
   }
 };
 

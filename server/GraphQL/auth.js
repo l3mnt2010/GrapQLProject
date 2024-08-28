@@ -59,13 +59,6 @@ const resolvers = {
           { where: { id: user.id } }
         );
 
-        res.cookie('accessToken', token, { 
-          httpOnly: true,
-          secure: false,
-          path: "/",
-          sameSite: "strict"
-        });
-
         res.cookie('refreshToken', refreshToken, { 
           httpOnly: true,
           secure: false,

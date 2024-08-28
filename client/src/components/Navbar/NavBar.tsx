@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DropDown from './DropDown';
@@ -19,13 +18,13 @@ const NavBar = () => {
                                                 <div className="hidden justify-between items-center w-full mx-auto lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
                                                     <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                                                         <li>
-                                                            <Link to="/" className="block py-2 pr-4 pl-3 hover:underline text-xl text-black font-bold rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-black" aria-current="page">Home</Link>
+                                                            <Link to="#" className="block py-2 pr-4 pl-3 hover:underline text-xl text-black font-bold rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-black" aria-current="page">Home</Link>
                                                         </li>
                                                         <li>
-                                                            <Link to="/services" className="block py-2 pr-4 pl-3 hover:underline text-xl text-black font-bold border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-black lg:dark:hover:text-black dark:hover:bg-gray-700 dark:hover:text-black lg:dark:hover:bg-transparent dark:border-gray-700">Services</Link>
+                                                            <Link to="#" className="block py-2 pr-4 pl-3 hover:underline text-xl text-black font-bold border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-black lg:dark:hover:text-black dark:hover:bg-gray-700 dark:hover:text-black lg:dark:hover:bg-transparent dark:border-gray-700">Services</Link>
                                                         </li>
                                                         <li>
-                                                            <Link to="/aboutus" className="block py-2 pr-4 pl-3 hover:underline text-xl text-black font-bold border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-black lg:dark:hover:text-black dark:hover:bg-gray-700 dark:hover:text-black lg:dark:hover:bg-transparent dark:border-gray-700">AboutUs</Link>
+                                                            <Link to="#" className="block py-2 pr-4 pl-3 hover:underline text-xl text-black font-bold border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-black lg:dark:hover:text-black dark:hover:bg-gray-700 dark:hover:text-black lg:dark:hover:bg-transparent dark:border-gray-700">AboutUs</Link>
                                                         </li>
                                                        
                                                     </ul>

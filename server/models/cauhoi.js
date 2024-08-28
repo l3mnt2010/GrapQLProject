@@ -1,4 +1,3 @@
-// models/cauhoi.js
 module.exports = (sequelize, DataTypes) => {
   const CauHoi = sequelize.define('cauhoi', {
     id: {
