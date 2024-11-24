@@ -1,0 +1,30 @@
+{
+  "name": "graphql",
+  "version": "1.0.0",
+  "description": "Ha Noi",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "server": "nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "l3mnt2010",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^3.13.0",
+    "electron": "^8.0.0",
+    "bcryptjs": "^2.4.3",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "graphql": "^16.9.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.0",
+    "nodemon": "^3.1.4",
+    "path": "^0.12.7",
+    "sequelize": "^6.6.5",
+    "winston": "^3.13.1"
+  }
+}

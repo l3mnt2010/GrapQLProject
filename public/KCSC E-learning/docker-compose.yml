@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  mysql:
+    build:
+      context: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: on_tap_khoa_hoc
+      MYSQL_USER: l3mnt2010
+      MYSQL_PASSWORD: l3mnt2010
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=mysql://l3mnt2010:l3mnt2010@mysql:3306/on_tap_khoa_hoc
+      - PORT=3306
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=l3mnt2010
+      - MYSQL_PASSWORD=l3mnt2010
+      - MYSQL_DATABASE=on_tap_khoa_hoc                    
+      - SECRET_KEY=supersecretkey
+      - REFRESH_SECRET_KEY=supersecretrefreshkey
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+  
+  frontend:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
